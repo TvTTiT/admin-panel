@@ -2,11 +2,10 @@
   <div class="centered-div">
     <h2>Categories</h2>
     <div>
-      <button @click="updateSort('name')">Sort by Name</button>
-      <button @click="updateSort('createdAt')">Sort by Created At</button>
-      <!-- Add more buttons or controls for sorting as needed -->
+      <!-- Dropdown for sorting by name -->
+      <Dropdown v-model="sortKey" :options="sortOptions" placeholder="Sort By Name" @change="onSortChange" />
     </div>
-    <DataView :value="flattenedCategories" :dataKey="'id'" :sortField="sortField" :sortOrder="sortOrder" @onSort="onSort">
+    <DataView :value="flattenedCategories" :sortOrder="sortOrder" :sortField="sortField" @onSort="onSort">
       <template #list="{ items }">
         <div class="category-container">
           <button v-for="(category, index) in items" :key="index" class="category-item" @click="handleCategoryClick(category)">
@@ -23,26 +22,49 @@
 
 <script setup lang="ts">
 import { categories } from '../components/categories';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const flattenedCategories = ref(categories.flat());
 
+const sortKey = ref(null); // Add this line to define sortKey
+
 const handleCategoryClick = (category) => {
-  // Handle category click logic here
   console.log('Category clicked:', category);
 };
 
-// Sorting
-const sortField = ref(''); // Default sorting is an empty string
+const sortField = ref('name'); // Default sorting is by name
 const sortOrder = ref(1); // 1 for ascending, -1 for descending
 
-const onSort = (event) => {
-  sortField.value = event.sortField;
-  sortOrder.value = event.sortOrder;
+const sortOptions = ['Ascending', 'Descending'];
+
+const onSort = () => {
+  // Trigger sorting logic based on sortField and sortOrder
+  // You can implement your sorting logic here
+  // For simplicity, let's assume the categories array is already sorted
+  flattenedCategories.value.sort((a, b) => {
+    const fieldA = a[sortField.value].toUpperCase();
+    const fieldB = b[sortField.value].toUpperCase();
+
+    let comparison = 0;
+    if (fieldA > fieldB) {
+      comparison = 1;
+    } else if (fieldA < fieldB) {
+      comparison = -1;
+    }
+
+    return sortOrder.value * comparison;
+  });
 };
 
-const updateSort = (field) => {
-  sortField.value = field;
+const onSortChange = () => {
+  // Update sortField and sortOrder based on the selected option
+  if (sortKey.value === 'Ascending') {
+    sortField.value = 'name';
+    sortOrder.value = 1;
+  } else if (sortKey.value === 'Descending') {
+    sortField.value = 'name';
+    sortOrder.value = -1;
+  }
 };
 </script>
 
