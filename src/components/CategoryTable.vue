@@ -1,5 +1,5 @@
 <template>
-    <DataTable :value="flattenedCategories" :rows="5" :paginator="flattenedCategories.length > 5" tableStyle="width: 100%">
+    <DataTable :value="flattenedCategories" :rows="5" :paginator="flattenedCategories.length > 5" tableStyle="width: 100%" :removableSort="true">
       <template #header>
         <div class="flex flex-wrap align-items-center justify-content-between gap-2">
           <span class="text-xl text-900 font-bold">Categories</span>
@@ -7,7 +7,7 @@
       </template>
   
       <!-- Define an array of fields you want to display -->
-      <Column v-for="field in displayFields" :key="field" :field="field" :header="formatHeader(field)"></Column>
+      <Column v-for="field in displayFields" :key="field" :field="field" :header="formatHeader(field)" :sortable="true"></Column>
   
       <template #footer>
         In total there are {{ flattenedCategories ? flattenedCategories.length : 0 }} categories.
