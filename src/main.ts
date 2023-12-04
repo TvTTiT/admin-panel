@@ -14,6 +14,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Card from 'primevue/card';
 import Menubar from 'primevue/menubar';
+
 const app = createApp(App);
 
 app.use(PrimeVue);

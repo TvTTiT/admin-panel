@@ -1,6 +1,5 @@
 <template>
   <div class="centered-div">
-    <h2>Categories</h2>
     <div class="toggle-container">
       <!-- Display Button -->
       <Button @click="toggleView" :label="displayList ? 'Switch to Table View' : 'Switch to List View'" :icon="displayList ? 'pi pi-table' : 'pi pi-list'" class="p-button-primary" />
