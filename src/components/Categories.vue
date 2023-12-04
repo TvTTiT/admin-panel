@@ -3,9 +3,9 @@
     <h2>Categories</h2>
     <div>
       <!-- Dropdown for sorting by name -->
-      <Dropdown v-model="sortKey" :options="sortOptions" placeholder="Sort By Name" @change="onSortChange" />
+      <Dropdown v-model="sortKey" :options="['Ascending', 'Descending']" placeholder="Sort By Name" @change="onSortChange" />
     </div>
-    <DataView :value="flattenedCategories" :sortOrder="sortOrder" :sortField="sortField" @onSort="onSort">
+    <DataView :value="flattenedCategories" :sortOrder="sortOrder" :sortField="sortField" :paginator="true" :rows="5" @page="onPageChange">
       <template #list="{ items }">
         <div class="category-container">
           <button v-for="(category, index) in items" :key="index" class="category-item" @click="handleCategoryClick(category)">
@@ -22,42 +22,20 @@
 
 <script setup lang="ts">
 import { categories } from '../components/categories';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const flattenedCategories = ref(categories.flat());
 
-const sortKey = ref(null); // Add this line to define sortKey
+const sortKey = ref(null);
 
 const handleCategoryClick = (category) => {
   console.log('Category clicked:', category);
 };
 
-const sortField = ref('name'); // Default sorting is by name
-const sortOrder = ref(1); // 1 for ascending, -1 for descending
-
-const sortOptions = ['Ascending', 'Descending'];
-
-const onSort = () => {
-  // Trigger sorting logic based on sortField and sortOrder
-  // You can implement your sorting logic here
-  // For simplicity, let's assume the categories array is already sorted
-  flattenedCategories.value.sort((a, b) => {
-    const fieldA = a[sortField.value].toUpperCase();
-    const fieldB = b[sortField.value].toUpperCase();
-
-    let comparison = 0;
-    if (fieldA > fieldB) {
-      comparison = 1;
-    } else if (fieldA < fieldB) {
-      comparison = -1;
-    }
-
-    return sortOrder.value * comparison;
-  });
-};
+const sortField = ref('name');
+const sortOrder = ref(1);
 
 const onSortChange = () => {
-  // Update sortField and sortOrder based on the selected option
   if (sortKey.value === 'Ascending') {
     sortField.value = 'name';
     sortOrder.value = 1;
@@ -65,6 +43,11 @@ const onSortChange = () => {
     sortField.value = 'name';
     sortOrder.value = -1;
   }
+};
+
+// Pagination logic
+const onPageChange = (event) => {
+  console.log('Page changed:', event.page + 1);
 };
 </script>
 
@@ -89,8 +72,8 @@ const onSortChange = () => {
   border: none;
   background: none;
   padding: 0;
-  flex: 1 1 20%; /* Display 4 items per row*/
-  max-width: 15%; /* Adjust the max-width as needed */
+  flex: 1 1 15%; 
+  max-width: 20%; /* Adjust the max-width as needed */
 }
 
 .category-box {

@@ -8,11 +8,12 @@ import 'primevue/resources/primevue.min.css'; // core css
 import 'primeicons/primeicons.css'; // icons
 import DataView from 'primevue/dataview';
 import Dropdown from 'primevue/dropdown'; 
-
+import Paginator from 'primevue/dataview';
 const app = createApp(App);
 
 app.use(PrimeVue);
 app.component('DataView', DataView);
 app.component('Dropdown', Dropdown);
+app.component('Paginator', Paginator);
 app.use(router);
 app.mount('#app');
