@@ -22,10 +22,10 @@
 </template>
 
 <script setup lang="ts">
-import { categories } from '../components/categories';
+import { categories } from '../data/categories';
 import { ref } from 'vue';
-import CategoryList from './CategoryList.vue';
-import CategoryTable from './CategoryTable.vue'; // Import the CategoryTable component
+import CategoryList from '../components/CategoryList.vue';
+import CategoryTable from '../components/CategoryTable.vue'; // Import the CategoryTable component
 
 const flattenedCategories = ref(categories.flat());
 

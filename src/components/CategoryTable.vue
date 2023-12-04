@@ -16,7 +16,7 @@
   </template>
   
   <script setup lang="ts">
-  import { categories } from '../components/categories';
+  import { categories } from '../data/categories';
   
   // Flatten the array of arrays into a single array of category objects
   const flattenedCategories = categories.flat();
