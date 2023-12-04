@@ -12,7 +12,8 @@ import Paginator from 'primevue/paginator';
 import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-
+import Card from 'primevue/card';
+import Menubar from 'primevue/menubar';
 const app = createApp(App);
 
 app.use(PrimeVue);
@@ -22,6 +23,8 @@ app.component('Paginator', Paginator);
 app.component('Button', Button);
 app.component('DataTable', DataTable);
 app.component('Column', Column);
+app.component('Card', Card);
+app.component('Menubar', Menubar);
 
 app.use(router);
 app.mount('#app');

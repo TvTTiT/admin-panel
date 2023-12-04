@@ -3,7 +3,7 @@
     <h2>Categories</h2>
     <div class="toggle-container">
       <!-- Display Button -->
-      <Button @click="toggleView" :label="displayList ? 'Switch to Table View' : 'Switch to List View'" :icon="displayList ? 'pi pi-table' : 'pi pi-list'" class="p-button-secondary" />
+      <Button @click="toggleView" :label="displayList ? 'Switch to Table View' : 'Switch to List View'" :icon="displayList ? 'pi pi-table' : 'pi pi-list'" class="p-button-primary" />
 
       <!-- Dropdown for sorting by name (visible only in list view) -->
       <Dropdown v-if="displayList" v-model="sortKey" :options="['Ascending', 'Descending']" placeholder="Sort By Name" @change="onSortChange" />
@@ -25,7 +25,7 @@
 import { categories } from '../data/categories';
 import { ref } from 'vue';
 import CategoryList from '../components/CategoryList.vue';
-import CategoryTable from '../components/CategoryTable.vue'; // Import the CategoryTable component
+import CategoryTable from '../components/CategoryTable.vue'; 
 
 const flattenedCategories = ref(categories.flat());
 
@@ -61,7 +61,7 @@ const toggleView = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px; /* Adjust as needed */
+  margin: 10px; 
 }
 
 .toggle-container {
@@ -70,12 +70,11 @@ const toggleView = () => {
   margin-bottom: 10px;
 }
 
-/* Adjust styles as needed */
 .toggle-container Button {
   margin-right: 10px;
-  padding: 5px 10px; /* Adjust as needed */
-  font-size: 14px; /* Adjust as needed */
-  width: 150px; /* Set a specific width for the button */
+  padding: 5px 10px; 
+  font-size: 14px; 
+  width: 150px; 
 }
 
 /* Ensure the dropdown doesn't affect layout when hidden */
@@ -86,16 +85,16 @@ const toggleView = () => {
 /* Display the dropdown only in list view */
 .displayList Dropdown {
   display: block;
-  width: 150px; /* Set the same width as the button */
+  width: 150px; 
 }
 
 /* Additional styles for DataView and other components */
 .DataView {
-  margin-top: 10px; /* Adjust as needed */
+  margin-top: 10px;
 }
 
 .CategoryTable {
-  width: 100%; /* Adjust as needed */
+  width: 100%; 
 }
 
 .CategoryList {
@@ -104,15 +103,15 @@ const toggleView = () => {
 }
 
 .CategoryList .category-item {
-  margin-bottom: 10px; /* Adjust as needed */
+  margin-bottom: 10px; 
 }
 
 .CategoryTable table {
-  width: 100%; /* Adjust as needed */
+  width: 100%; 
 }
 
 .CategoryTable th,
 .CategoryTable td {
-  padding: 10px; /* Adjust as needed */
+  padding: 10px; 
 }
 </style>

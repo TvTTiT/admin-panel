@@ -22,7 +22,7 @@ const handleCategoryClick = (category) => {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  max-width: 1000px; /* Adjust the max-width as needed */
+  max-width: 1000px; 
 }
 
 .category-item {
@@ -33,23 +33,23 @@ const handleCategoryClick = (category) => {
   background: none;
   padding: 0;
   flex: 1 1 15%;
-  max-width: 20%; /* Adjust the max-width as needed */
+  max-width: 20%; 
 }
 
 .category-box {
-  border: 2px solid #ccc; /* Border color for the box */
-  padding: 10px; /* Adjust padding as needed */
-  border-radius: 8px; /* Adjust border-radius as needed */
+  border: 2px solid #ccc; 
+  padding: 10px; 
+  border-radius: 8px; 
 }
 
 .category-icon {
-  width: 80px; /* Adjust the size as needed */
-  height: 80px; /* Adjust the size as needed */
+  width: 80px; 
+  height: 80px; 
   object-fit: contain;
 }
 
 .category-name {
-  margin-top: 5px; /* Adjust the spacing between icon and name */
-  font-size: 14px; /* Adjust font size as needed */
+  margin-top: 5px; 
+  font-size: 14px; 
 }
 </style>
