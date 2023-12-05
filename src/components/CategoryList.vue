@@ -20,17 +20,22 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
+import { useRoute, useRouter } from 'vue-router'; 
 
 const props = defineProps(['items']);
+const router = useRouter(); 
+const route = useRoute(); 
 
 const handleCategoryClick = (category) => {
   console.log('Category clicked:', category);
 };
 
 const handleAddCategoryClick = () => {
-  console.log('Add Category clicked');
+  // Navigate to the NewCategoryView
+  router.push({ name: 'new-category' });
 };
 </script>
+
 
 <style scoped>
 .category-title {
