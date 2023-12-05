@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="category-title">Categories</div>
-
     <div class="category-container">
       <div v-for="(category, index) in items" :key="index" class="category-item p-shadow-4" @click="handleCategoryClick(category)">
         <div class="category-box">

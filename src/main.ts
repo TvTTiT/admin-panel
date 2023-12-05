@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
-
+import ConfirmationService from 'primevue/confirmationservice';
 
 import 'primevue/resources/themes/lara-light-green/theme.css'; // theme
 import 'primevue/resources/primevue.min.css'; // core css
@@ -20,12 +20,13 @@ import InputText from 'primevue/inputtext';
 import Calendar from 'primevue/calendar';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
-
+import ConfirmDialog from 'primevue/confirmdialog';
 
 const app = createApp(App);
 
 app.use(PrimeVue);
 app.use(ToastService);
+app.use(ConfirmationService);
 
 // Register components
 app.component('DataView', DataView);
@@ -39,6 +40,7 @@ app.component('Menubar', Menubar);
 app.component('InputText', InputText);
 app.component('Calendar', Calendar);
 app.component('Toast', Toast);
+app.component('ConfirmDialog', ConfirmDialog);
 
 app.use(router);
 
