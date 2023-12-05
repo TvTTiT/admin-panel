@@ -28,7 +28,7 @@ const goToCategories = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-    height: 300px; 
+  height: 500px; 
   margin: 0;
 }
 
