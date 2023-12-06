@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import Categories from '../views/CategoryView.vue';
+import ApiCategories from '../views/ApiCategoryView.vue';
 import NewCategoryView from '../views/NewCategoryView.vue'; 
 
 const router = createRouter({
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/new-category',
       name: 'new-category',
       component: NewCategoryView, 
+    },
+    {
+      path: '/api-category',
+      name: 'api-category',
+      component: ApiCategories, 
     },
   ],
 });

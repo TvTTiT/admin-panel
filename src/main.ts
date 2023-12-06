@@ -22,6 +22,9 @@ import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
 
+//supabase
+import supabase from './lib/supabase';
+
 const app = createApp(App);
 
 app.use(PrimeVue);
@@ -41,6 +44,9 @@ app.component('InputText', InputText);
 app.component('Calendar', Calendar);
 app.component('Toast', Toast);
 app.component('ConfirmDialog', ConfirmDialog);
+
+// Provide the supabase instance globally
+app.config.globalProperties.$supabase = supabase;
 
 app.use(router);
 
