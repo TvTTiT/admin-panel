@@ -1,21 +1,23 @@
 <template>
   <div class="datatable-container">
+    <div class="p-input-icon-left global-search">
+      <i class="pi pi-search"></i>
+      <InputText v-model="globalFilter" placeholder="Global Search" />
+    </div>
+
     <DataTable
-      v-model:editingRows="editingRows"
-      :value="flattenedCategories"
+      :value="filteredCategories"
       :editMode="'row'"
       dataKey="id"
-      @row-edit-save="onRowEditSave"
       :paginator="true"
       :rows="5"
       :rowsPerPageOptions="[5, 10, 20]"
       :removable-sort="true"
-      :tableStyle="{ overflow: 'auto' }"
-      :class="{ 'editing-mode': editingRows.length > 0 }"
-      style="max-height: 600px; width: 100%;"
+      :tableStyle="{ overflow: 'auto', 'max-height': '600px', width: '100%' }"
     >
+
     <template #header>
-      <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+      <div class="flex flex-wrap align-items-center justify-content-between">
         <span class="text-lg font-semibold">Categories</span>
       </div>
     </template>
@@ -26,12 +28,16 @@
       </template>
     </Column>
 
-    <Column
-      :rowEditor="true"
-      style="width: 10%; min-width: 8rem"
-      bodyStyle="text-align:center"
-      :editorStyle="{ width: '50%', maxWidth: '20rem' }"
-    ></Column>
+    <Column :rowEditor="true" style="width: 20%; min-width: 8rem" bodyStyle="text-align:center">
+      <template #body>
+        <button class="p-button p-button-text p-mr-2">
+          <i class="pi pi-pencil"></i>
+        </button>
+        <button class="p-button p-button-text">
+          <i class="pi pi-trash"></i>
+        </button>
+      </template>
+    </Column>
 
     <template #footer>
       In total there are {{ flattenedCategories ? flattenedCategories.length : 0 }} categories.
@@ -40,34 +46,39 @@
 </div>
 </template>
   
-  <script setup lang="ts">
-  import { ref } from 'vue';
-  import { categories } from '../data/categories';
-  
-  const flattenedCategories = ref(categories.reduce((acc, current) => acc.concat(current), []));
-  
-  const editingRows = ref([]);
-  
-  const displayFields = ["id", "name", "slug", "iconUrl", "activeFrom", "activeUntil", "createdAt", "updatedAt"];
-  
-  // Helper function to format header based on field name
-  const formatHeader = (field) => {
-    return field.charAt(0).toUpperCase() + field.slice(1);
-  };
-  
-  const onRowEditSave = (event) => {
-    console.log('Row edit saved:', event);
-  };
-  
-  
-  </script>
-  
-  <style scoped>
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { categories } from '../data/categories';
+
+const globalFilter = ref('');
+const flattenedCategories = ref(categories.reduce((acc, current) => acc.concat(current), []));
+const displayFields = ["id", "name", "slug", "iconUrl", "activeFrom", "activeUntil", "createdAt", "updatedAt"];
+
+// Helper function to format header based on field name
+const formatHeader = (field) => {
+  return field.charAt(0).toUpperCase() + field.slice(1);
+};
+
+// Watch for changes in globalFilter and update the filteredCategories accordingly
+const filteredCategories = ref(flattenedCategories.value);
+
+watch(globalFilter, (newVal) => {
+  const searchTerm = newVal.toLowerCase();
+
+  filteredCategories.value = searchTerm
+    ? flattenedCategories.value.filter(category => {
+        return displayFields.some(field => {
+          const fieldValue = String(category[field]).toLowerCase();
+          return fieldValue.includes(searchTerm);
+        });
+      })
+    : flattenedCategories.value;
+});
+</script>
+<style scoped>
 .datatable-container {
   overflow-x: auto;
   overflow-y: auto;
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .p-datatable {
@@ -82,7 +93,9 @@
   padding: 6px;
 }
 
-.p-datatable.editing-mode {
-  overflow: auto; 
+.global-search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
 }
- </style>
+</style>

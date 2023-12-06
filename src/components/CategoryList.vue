@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="category-title">Categories</div>
+    <h2>Static Categories</h2>
     <div class="category-container">
       <div v-for="(category, index) in items" :key="index" class="category-item p-shadow-4" @click="handleCategoryClick(category)">
         <div class="category-box">
@@ -11,7 +11,7 @@
 
       <button class="add-category p-button p-button-outlined" @click="handleAddCategoryClick">
         <i class="pi pi-plus add-category-icon"></i>
-        <div class="category-name add-category-name">Add Category</div>
+        <div class="category-name add-category-name">New Category</div>
       </button>
     </div>
   </div>
@@ -23,7 +23,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps(['items']);
 const router = useRouter(); 
-const route = useRoute(); 
 
 const handleCategoryClick = (category) => {
   console.log('Category clicked:', category);
@@ -37,12 +36,6 @@ const handleAddCategoryClick = () => {
 
 
 <style scoped>
-.category-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 30px;
-}
-
 .category-container {
   display: flex;
   justify-content: flex-start;
@@ -62,7 +55,6 @@ const handleAddCategoryClick = () => {
   flex-direction: column;
   align-items: center;
   width: 150px;
-  transition: transform 0.3s;
   margin-bottom: 10px;
 }
 

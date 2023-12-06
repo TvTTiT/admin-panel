@@ -126,7 +126,6 @@ onMounted(() => {
   width: 100%;
 }
 
-
 .p-mb-3 {
   margin-bottom: 15px;
 }

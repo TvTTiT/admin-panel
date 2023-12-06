@@ -7,6 +7,7 @@
       <!-- Dropdown for sorting by name (visible only in list view) -->
       <Dropdown v-if="displayList" v-model="sortKey" :options="['Ascending', 'Descending']" placeholder="Sort By Name" @change="onSortChange" />
     </div>
+    
     <template v-if="displayList">
       <DataView :value="flattenedCategories" :sortOrder="sortOrder" :sortField="sortField" :paginator="true" :rows="5" @page="onPageChange">
         <template #list="{ items }">
@@ -60,7 +61,7 @@ const toggleView = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px; 
+  margin: 10px;
 }
 
 .toggle-container {
@@ -71,9 +72,9 @@ const toggleView = () => {
 
 .toggle-container Button {
   margin-right: 10px;
-  padding: 5px 10px; 
-  font-size: 14px; 
-  width: 150px; 
+  padding: 5px 10px;
+  font-size: 14px;
+  width: 150px;
 }
 
 /* Ensure the dropdown doesn't affect layout when hidden */
@@ -81,19 +82,17 @@ const toggleView = () => {
   display: none;
 }
 
-/* Display the dropdown only in list view */
-.displayList Dropdown {
+.displayList .toggle-container Dropdown {
   display: block;
-  width: 150px; 
+  width: 150px;
 }
 
-/* Additional styles for DataView and other components */
 .DataView {
   margin-top: 10px;
 }
 
 .CategoryTable {
-  width: 100%; 
+  width: 100%;
 }
 
 .CategoryList {
@@ -102,15 +101,15 @@ const toggleView = () => {
 }
 
 .CategoryList .category-item {
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .CategoryTable table {
-  width: 100%; 
+  width: 100%;
 }
 
 .CategoryTable th,
 .CategoryTable td {
-  padding: 10px; 
+  padding: 10px;
 }
 </style>
