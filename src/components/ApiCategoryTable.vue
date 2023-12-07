@@ -28,29 +28,29 @@
 
       <Column v-for="field in displayFields" :key="field" :field="field" :header="formatHeader(field)" :sortable="true">
         <template #body="rowData">
-          <template v-if="!editingRows.includes(rowData.data.id)">
-            <template v-if="field === 'activeFrom' || field === 'activeUntil'">
-              {{ rowData.data[field] }}
-            </template>
-            <template v-else-if="field === 'id' || field === 'updatedAt'">
-              {{ rowData.data[field] }}
-            </template>
-            <template v-else>
-              {{ rowData.data[field] }}
-            </template>
-          </template>
-          <template v-else>
-            <template v-if="field === 'activeFrom' || field === 'activeUntil'">
-              <Calendar v-model="rowData.data[field]" :showIcon="true" :placeholder="formatHeader(field)" />
-            </template>
-            <template v-else-if="field === 'id' || field === 'updatedAt'">
-              {{ rowData.data[field] }}
-            </template>
-            <template v-else>
-              <InputText v-model="rowData.data[field]" />
-            </template>
-          </template>
+      <template v-if="!editingRows.includes(rowData.data.id)">
+        <template v-if="field === 'activeFrom' || field === 'activeUntil'">
+          {{ rowData.data[field] }}
         </template>
+        <template v-else-if="field === 'id' || field === 'updatedAt'">
+          {{ rowData.data[field] }}
+        </template>
+        <template v-else>
+          {{ rowData.data[field] }}
+        </template>
+      </template>
+      <template v-else>
+        <template v-if="field === 'activeFrom' || field === 'activeUntil' || field === 'createdAt'">
+          <Calendar v-model="rowData.data[field]" :showIcon="true" :placeholder="formatHeader(field)" />
+        </template>
+        <template v-else-if="field === 'id' || field === 'updatedAt'">
+          {{ rowData.data[field] }}
+        </template>
+        <template v-else>
+          <InputText v-model="rowData.data[field]" />
+        </template>
+      </template>
+    </template>
       </Column>
 
       <Column :rowEditor="true" style="width: 150px" bodyStyle="text-align:center">
@@ -99,17 +99,69 @@ const editRow = (id) => {
   editingRows.value.push(id);
 };
 
-const saveRow = (id) => {
-  console.log(`Saving changes for row ${id}`);
-  editingRows.value = editingRows.value.filter(rowId => rowId !== id);
+const saveRow = async (id) => {
+  try {
+    console.log(`Saving changes for row ${id}`);
+    editingRows.value = editingRows.value.filter(rowId => rowId !== id);
+
+    // Find the edited category by id
+    const editedCategory = categories.value.find(category => category.id === id);
+
+    // Update the category in the Supabase database with the current time
+    const { data, error } = await supabase
+      .from('Categories')
+      .update({
+        name: editedCategory.name,
+        slug: editedCategory.slug,
+        iconUrl: editedCategory.iconUrl,
+        activeFrom: editedCategory.activeFrom,
+        activeUntil: editedCategory.activeUntil,
+        createdAt: editedCategory.createdAt,
+        updatedAt: new Date(), 
+      })
+      .eq('id', id);
+
+    if (error) {
+      throw error;
+    }
+
+    console.log('Updated data in Supabase:', data);
+
+    // Fetch the updated data from Supabase after saving
+    await fetchDataFromSupabase();
+  } catch (error) {
+    console.error('Error updating data in Supabase:', error.message);
+  }
 };
 
-const cancelEdit = (id) => {
-  console.log(`Canceling edit for row ${id}`);
-  editingRows.value = editingRows.value.filter(rowId => rowId !== id);
+const deleteRow = async (id) => {
+  try {
+    console.log(`Deleting row ${id}`);
+
+    // Delete the category locally
+    categories.value = categories.value.filter(category => category.id !== id);
+    editingRows.value = editingRows.value.filter(rowId => rowId !== id);
+
+    // Delete the category in the Supabase database
+    const { error } = await supabase
+      .from('Categories')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      throw error;
+    }
+
+    console.log('Deleted data in Supabase');
+
+    // Fetch the updated data from Supabase after deleting
+    await fetchDataFromSupabase();
+  } catch (error) {
+    console.error('Error deleting data in Supabase:', error.message);
+  }
 };
 
-onMounted(async () => {
+const fetchDataFromSupabase = async () => {
   try {
     const { data, error } = await supabase.from('Categories').select('*');
     if (error) {
@@ -118,11 +170,20 @@ onMounted(async () => {
     console.log('Fetched data from Supabase:', data);
     categories.value = data;
 
-    // Initialize filteredCategories with all categories
+    // Update filteredCategories with the latest data
     filteredCategories.value = categories.value;
   } catch (error) {
     console.error('Error fetching data from Supabase:', error.message);
   }
+};
+
+const cancelEdit = (id) => {
+  console.log(`Canceling edit for row ${id}`);
+  editingRows.value = editingRows.value.filter(rowId => rowId !== id);
+};
+
+onMounted(async () => {
+  fetchDataFromSupabase();
 });
 
 watch(globalFilter, (newVal) => {
