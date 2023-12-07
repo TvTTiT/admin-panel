@@ -13,7 +13,7 @@
       :rows="5"
       :rowsPerPageOptions="[5, 10, 20]"
       :removable-sort="true"
-      :tableStyle="{ overflow: 'auto', 'max-height': '600px', width: '100%' }"
+      :tableStyle="{ overflow: 'auto', 'max-height': '600px', width: '100%', 'min-width': '1500px' }" 
     >
 
     <template #header>
@@ -28,7 +28,7 @@
       </template>
     </Column>
 
-    <Column :rowEditor="true" style="width: 20%; min-width: 8rem" bodyStyle="text-align:center">
+    <Column :rowEditor="true" style="width: 10% " bodyStyle="text-align:center">
       <template #body>
         <button class="p-button p-button-text p-mr-2">
           <i class="pi pi-pencil"></i>
@@ -40,7 +40,7 @@
     </Column>
 
     <template #footer>
-      In total there are {{ flattenedCategories ? flattenedCategories.length : 0 }} categories.
+      In total there are {{ filteredCategories ? filteredCategories.length : 0 }} categories.
     </template>
   </DataTable>
 </div>
@@ -73,6 +73,11 @@ watch(globalFilter, (newVal) => {
         });
       })
     : flattenedCategories.value;
+
+  // Check if there is no data and set filteredCategories to an empty array
+  if (filteredCategories.value === undefined) {
+    filteredCategories.value = [];
+  }
 });
 </script>
 <style scoped>
@@ -98,4 +103,29 @@ watch(globalFilter, (newVal) => {
   align-items: center;
   margin-bottom: 5px;
 }
+
+.p-datatable {
+  font-size: 12px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.p-datatable thead th,
+.p-datatable tbody td {
+  padding: 8px;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+
+.global-search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.p-inputtext {
+  width: 100%;
+}
+
 </style>
