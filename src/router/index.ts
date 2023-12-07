@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue';
 import Categories from '../views/CategoryView.vue';
 import ApiCategories from '../views/ApiCategoryView.vue';
 import NewCategoryView from '../views/NewCategoryView.vue'; 
+import ApiNewCategoryView from '../views/ApiNewCategoryView.vue'; 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/api-category',
       name: 'api-category',
       component: ApiCategories, 
+    },
+    {
+      path: '/api-new-category',
+      name: 'api-new-category',
+      component: ApiNewCategoryView, 
     },
   ],
 });

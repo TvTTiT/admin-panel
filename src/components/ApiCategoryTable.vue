@@ -7,6 +7,11 @@
       <InputText v-model="globalFilter" placeholder="Global Search" />
     </div>
 
+    <!-- Add a floating icon button -->
+    <Button class="floating-icon-button p-button-rounded" @click="handleAddCategory">
+      <i class="pi pi-plus"></i>
+    </Button>
+
     <DataTable
       v-model:editingRows="editingRows"
       :value="filteredCategories"
@@ -28,29 +33,29 @@
 
       <Column v-for="field in displayFields" :key="field" :field="field" :header="formatHeader(field)" :sortable="true">
         <template #body="rowData">
-      <template v-if="!editingRows.includes(rowData.data.id)">
-        <template v-if="field === 'activeFrom' || field === 'activeUntil'">
-          {{ rowData.data[field] }}
+          <template v-if="!editingRows.includes(rowData.data.id)">
+            <template v-if="['activeFrom', 'activeUntil'].includes(field)">
+              {{ rowData.data[field] }}
+            </template>
+            <template v-else-if="['id', 'updatedAt'].includes(field)">
+              {{ rowData.data[field] }}
+            </template>
+            <template v-else>
+              {{ rowData.data[field] }}
+            </template>
+          </template>
+          <template v-else>
+            <template v-if="['activeFrom', 'activeUntil', 'createdAt'].includes(field)">
+              <Calendar v-model="rowData.data[field]" :showIcon="true" :placeholder="formatHeader(field)" />
+            </template>
+            <template v-else-if="['id', 'updatedAt'].includes(field)">
+              {{ rowData.data[field] }}
+            </template>
+            <template v-else>
+              <InputText v-model="rowData.data[field]" />
+            </template>
+          </template>
         </template>
-        <template v-else-if="field === 'id' || field === 'updatedAt'">
-          {{ rowData.data[field] }}
-        </template>
-        <template v-else>
-          {{ rowData.data[field] }}
-        </template>
-      </template>
-      <template v-else>
-        <template v-if="field === 'activeFrom' || field === 'activeUntil' || field === 'createdAt'">
-          <Calendar v-model="rowData.data[field]" :showIcon="true" :placeholder="formatHeader(field)" />
-        </template>
-        <template v-else-if="field === 'id' || field === 'updatedAt'">
-          {{ rowData.data[field] }}
-        </template>
-        <template v-else>
-          <InputText v-model="rowData.data[field]" />
-        </template>
-      </template>
-    </template>
       </Column>
 
       <Column :rowEditor="true" style="width: 150px" bodyStyle="text-align:center">
@@ -76,23 +81,25 @@
         In total there are {{ filteredCategories ? filteredCategories.length : 0 }} categories.
       </template>
     </DataTable>
+    <Toast ref="toast" />
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import supabase from '../lib/supabase';
+import { useToast } from "primevue/usetoast";
+import {useRouter } from 'vue-router'; 
 
+const router = useRouter(); 
+const toast = useToast();
 const editingRows = ref([]);
 const globalFilter = ref('');
 const categories = ref([]);
 const filteredCategories = ref([]);
 const displayFields = ["id", "name", "slug", "iconUrl", "activeFrom", "activeUntil", "createdAt", "updatedAt"];
 
-const formatHeader = (field) => {
-  return field.charAt(0).toUpperCase() + field.slice(1);
-};
+const formatHeader = (field) => field.charAt(0).toUpperCase() + field.slice(1);
 
 const editRow = (id) => {
   console.log(`Editing row ${id}`);
@@ -104,10 +111,8 @@ const saveRow = async (id) => {
     console.log(`Saving changes for row ${id}`);
     editingRows.value = editingRows.value.filter(rowId => rowId !== id);
 
-    // Find the edited category by id
     const editedCategory = categories.value.find(category => category.id === id);
 
-    // Update the category in the Supabase database with the current time
     const { data, error } = await supabase
       .from('Categories')
       .update({
@@ -117,20 +122,23 @@ const saveRow = async (id) => {
         activeFrom: editedCategory.activeFrom,
         activeUntil: editedCategory.activeUntil,
         createdAt: editedCategory.createdAt,
-        updatedAt: new Date(), 
+        updatedAt: new Date(),
       })
       .eq('id', id);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     console.log('Updated data in Supabase:', data);
 
-    // Fetch the updated data from Supabase after saving
     await fetchDataFromSupabase();
+
+    // Display success message
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Row updated successfully', life: 3000 });
   } catch (error) {
     console.error('Error updating data in Supabase:', error.message);
+    
+    // Display error message
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to update row', life: 3000 });
   }
 };
 
@@ -138,39 +146,37 @@ const deleteRow = async (id) => {
   try {
     console.log(`Deleting row ${id}`);
 
-    // Delete the category locally
     categories.value = categories.value.filter(category => category.id !== id);
     editingRows.value = editingRows.value.filter(rowId => rowId !== id);
 
-    // Delete the category in the Supabase database
     const { error } = await supabase
       .from('Categories')
       .delete()
       .eq('id', id);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     console.log('Deleted data in Supabase');
 
-    // Fetch the updated data from Supabase after deleting
     await fetchDataFromSupabase();
+
+    // Display success message
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Row deleted successfully', life: 3000 });
   } catch (error) {
     console.error('Error deleting data in Supabase:', error.message);
+
+    // Display error message
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete row', life: 3000 });
   }
 };
 
 const fetchDataFromSupabase = async () => {
   try {
     const { data, error } = await supabase.from('Categories').select('*');
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
+
     console.log('Fetched data from Supabase:', data);
     categories.value = data;
-
-    // Update filteredCategories with the latest data
     filteredCategories.value = categories.value;
   } catch (error) {
     console.error('Error fetching data from Supabase:', error.message);
@@ -182,6 +188,11 @@ const cancelEdit = (id) => {
   editingRows.value = editingRows.value.filter(rowId => rowId !== id);
 };
 
+const handleAddCategory = () => {
+  // Navigate to the ApiNewCategory
+  router.push({ name: 'api-new-category' });
+};
+
 onMounted(async () => {
   fetchDataFromSupabase();
 });
@@ -190,13 +201,8 @@ watch(globalFilter, (newVal) => {
   const searchTerm = newVal.toLowerCase();
 
   filteredCategories.value = searchTerm
-    ? categories.value.filter(category => {
-      return displayFields.some(field => {
-        const fieldValue = String(category[field]).toLowerCase();
-        return fieldValue.includes(searchTerm);
-      });
-    })
-    : categories.value; // Show all categories when search is empty
+    ? categories.value.filter(category => displayFields.some(field => String(category[field]).toLowerCase().includes(searchTerm)))
+    : categories.value;
 });
 </script>
 
@@ -210,32 +216,12 @@ watch(globalFilter, (newVal) => {
   font-size: 12px;
 }
 
-.p-datatable thead th {
-  padding: 8px;
-}
-
-.p-datatable tbody td {
-  padding: 6px;
-}
-
-.global-search {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.p-datatable {
-  font-size: 12px;
-  table-layout: fixed;
-  width: 100%;
-}
-
 .p-datatable thead th,
 .p-datatable tbody td {
   padding: 8px;
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .global-search {
@@ -248,4 +234,12 @@ watch(globalFilter, (newVal) => {
   width: 100%;
 }
 
+.floating-icon-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000; 
+}
+
 </style>
+
