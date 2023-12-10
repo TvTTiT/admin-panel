@@ -16,7 +16,7 @@
       </DataView>
     </template>
     <template v-else>
-      <CategoryTable :categories="flattenedCategories" />
+      <CategoryTable/>
     </template>
   </div>
 </template>

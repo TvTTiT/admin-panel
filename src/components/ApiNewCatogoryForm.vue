@@ -1,61 +1,49 @@
 <template>
-    <div>
-      <!-- Name Input -->
-      <div class="p-col-12 p-mb-3">
-        <div class="field">
-          <div class="p-input-icon-right">
-            <i class="pi pi-user" />
-            <InputText v-model="formData.name" id="name" class="p-inputtext" placeholder="Name" autofocus autocomplete="name" />
-          </div>
-        </div>
-      </div>
-  
-      <!-- Slug Input -->
-      <div class="p-col-12 p-mb-3">
-        <div class="field">
-          <div class="p-input-icon-right">
-            <i class="pi pi-pencil" />
-            <InputText v-model="formData.slug" id="slug" class="p-inputtext" placeholder="Slug" autocomplete="slug" />
-          </div>
-        </div>
-      </div>
-  
-      <!-- Icon URL Input -->
-      <div class="p-col-12 p-mb-3">
-        <div class="field">
-          <div class="p-input-icon-right">
-            <i class="pi pi-image" />
-            <InputText v-model="formData.iconUrl" id="iconUrl" class="p-inputtext" placeholder="Icon URL" autocomplete="iconUrl" />
-          </div>
-        </div>
-      </div>
-  
-      <!-- Active From Input -->
-      <div class="p-col-12 p-mb-3">
-        <div class="field">
-          <label for="activeFrom">Active From</label>
-          <Calendar v-model="formData.activeFrom" id="activeFrom" class="p-inputtext" showIcon autocomplete="activeFrom" />
-        </div>
-      </div>
-  
-      <!-- Active Until Input -->
-      <div class="p-col-12 p-mb-3">
-        <div class="field">
-          <label for="activeUntil">Active Until</label>
-          <Calendar v-model="formData.activeUntil" id="activeUntil" class="p-inputtext" showIcon autocomplete="activeUntil" />
-        </div>
-      </div>
-  
-      <!-- Save Button -->
-      <div class="p-col-12">
-        <Button label="Save & Download" @click="saveCategory" class="p-button-success" />
+  <div>
+  <!-- Name Input -->
+    <div class="field">
+      <div class="p-input-icon-right">
+        <i class="pi pi-user" />
+        <InputText v-model="formData.name" id="name" class="p-inputtext" placeholder="Name" autofocus autocomplete="name" />
       </div>
     </div>
-  </template>
+
+  <!-- Slug Input -->
+    <div class="field">
+      <div class="p-input-icon-right">
+        <i class="pi pi-pencil" />
+        <InputText v-model="formData.slug" id="slug" class="p-inputtext" placeholder="Slug" autocomplete="slug" />
+      </div>
+    </div>
+
+  <!-- Icon URL Input -->
+    <div class="field">
+      <div class="p-input-icon-right">
+        <i class="pi pi-image" />
+        <InputText v-model="formData.iconUrl" id="iconUrl" class="p-inputtext" placeholder="Icon URL" autocomplete="iconUrl" />
+      </div>
+    </div>
+
+  <!-- Active From Input -->
+    <div class="field">
+      <label for="activeFrom">Active From</label>
+      <Calendar v-model="formData.activeFrom" id="activeFrom" class="p-inputtext" showIcon autocomplete="activeFrom" />
+    </div>
+
+  <!-- Active Until Input -->
+    <div class="field">
+      <label for="activeUntil">Active Until</label>
+      <Calendar v-model="formData.activeUntil" id="activeUntil" class="p-inputtext" showIcon autocomplete="activeUntil" />
+    </div>
+
+  <!-- Save Button -->
+    <Button label="Save & Download" @click="saveCategory" class="p-button-success" />
+  </div>
+</template>
   
   
-  <script setup lang="ts">
- import { ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import supabase from '../lib/supabase';
 

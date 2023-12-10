@@ -2,10 +2,10 @@
   <div class="new-category-view">
     <Card class="new-category-card">
       <template #title>
-        <h2 class="p-mb-4">New Category</h2>
+        <h2>New Category</h2>
       </template>
       <template #content>
-        <div class="p-grid p-fluid">
+        <div>
           <NewCategoryForm />
         </div>
       </template>

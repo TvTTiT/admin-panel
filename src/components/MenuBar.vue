@@ -1,43 +1,15 @@
 <template>
   <Menubar :model="items">
-    <template #item="{ item, props, hasSubmenu }">
-      <router-link v-if="item.route" :to="item.route" class="menu-link">
-        <a v-bind="props.action">
-          <div class="menu-item">
-            <span :class="item.icon" class="menu-icon" />
-            <span class="menu-label">{{ item.label }}</span>
-          </div>
-        </a>
-      </router-link>
-      <a v-else :href="item.url" :target="item.target" class="menu-link" v-bind="props.action">
-        <div class="menu-item">
+    <template #item="{ item, props }">
+      <router-link :to="item.route" class="menu-link">
+        <div v-bind="props.action" class="menu-item">
           <span :class="item.icon" class="menu-icon" />
           <span class="menu-label">{{ item.label }}</span>
-          <span v-if="hasSubmenu" class="submenu-icon pi pi-fw pi-angle-down" />
         </div>
-      </a>
+      </router-link>
     </template>
   </Menubar>
 </template>
-
-<style scoped>
-.menu-link {
-  text-decoration: none; /* Remove underlines */
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-}
-
-.menu-icon {
-  margin-right: 8px; 
-}
-
-.menu-label {
-  margin-right: 16px; 
-}
-</style>
 
 <script setup lang="ts">
 const items = [
@@ -58,3 +30,23 @@ const items = [
   },
 ];
 </script>
+
+<style scoped>
+.menu-link {
+  text-decoration: none;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  margin-right: 8px; 
+}
+
+.menu-label {
+  margin-right: 16px; 
+}
+</style>
+

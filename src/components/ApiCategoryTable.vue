@@ -2,16 +2,18 @@
   <div class="datatable-container">
     <h2>Supabase Api Categories</h2>
 
+    <!-- Global search input -->
     <div class="p-input-icon-left global-search">
       <i class="pi pi-search"></i>
       <InputText v-model="globalFilter" placeholder="Global Search" />
     </div>
 
-    <!-- Add a floating icon button -->
+    <!-- Floating icon button to add a new category -->
     <Button class="floating-icon-button p-button-rounded" @click="handleAddCategory">
       <i class="pi pi-plus"></i>
     </Button>
 
+    <!-- DataTable component to display categories -->
     <DataTable
       v-model:editingRows="editingRows"
       :value="filteredCategories"
@@ -25,12 +27,14 @@
       @row-edit-save="saveRow"
       @row-edit-cancel="cancelEdit"
     >
+      <!-- Header template -->
       <template #header>
         <div class="flex flex-wrap align-items-center justify-content-between gap-2">
           <span class="text-lg font-semibold">Categories</span>
         </div>
       </template>
 
+      <!-- Column definitions -->
       <Column v-for="field in displayFields" :key="field" :field="field" :header="formatHeader(field)" :sortable="true">
         <template #body="rowData">
           <template v-if="!editingRows.includes(rowData.data.id)">
@@ -58,6 +62,7 @@
         </template>
       </Column>
 
+      <!-- Column for row editing actions -->
       <Column :rowEditor="true" style="width: 150px" bodyStyle="text-align:center">
         <template #body="rowData">
           <button v-if="!editingRows.includes(rowData.data.id)" class="p-button p-button-text p-mr-2" @click="editRow(rowData.data.id)">
@@ -77,10 +82,12 @@
         </template>
       </Column>
 
+      <!-- Footer template showing the total number of categories -->
       <template #footer>
         In total there are {{ filteredCategories ? filteredCategories.length : 0 }} categories.
       </template>
     </DataTable>
+    <!-- Toast component for displaying notifications -->
     <Toast ref="toast" />
   </div>
 </template>
@@ -89,30 +96,42 @@
 import { ref, onMounted, watch } from 'vue';
 import supabase from '../lib/supabase';
 import { useToast } from "primevue/usetoast";
-import {useRouter } from 'vue-router'; 
+import { useRouter } from 'vue-router';
 
-const router = useRouter(); 
+// Vue Router instance
+const router = useRouter();
+// PrimeVue Toast instance
 const toast = useToast();
+// Ref for tracking editing rows
 const editingRows = ref([]);
+// Ref for global search filter
 const globalFilter = ref('');
+// Ref for storing categories data
 const categories = ref([]);
+// Ref for storing filtered categories
 const filteredCategories = ref([]);
+// Array of fields to display in the DataTable
 const displayFields = ["id", "name", "slug", "iconUrl", "activeFrom", "activeUntil", "createdAt", "updatedAt"];
 
+// Function to format header labels
 const formatHeader = (field) => field.charAt(0).toUpperCase() + field.slice(1);
 
+// Function to initiate editing of a row
 const editRow = (id) => {
   console.log(`Editing row ${id}`);
   editingRows.value.push(id);
 };
 
+// Function to save changes made to a row
 const saveRow = async (id) => {
   try {
     console.log(`Saving changes for row ${id}`);
     editingRows.value = editingRows.value.filter(rowId => rowId !== id);
 
+    // Find the edited category in the categories array
     const editedCategory = categories.value.find(category => category.id === id);
 
+    // Update the category data in Supabase
     const { data, error } = await supabase
       .from('Categories')
       .update({
@@ -130,25 +149,29 @@ const saveRow = async (id) => {
 
     console.log('Updated data in Supabase:', data);
 
+    // Refresh data from Supabase
     await fetchDataFromSupabase();
 
     // Display success message
     toast.add({ severity: 'success', summary: 'Success', detail: 'Row updated successfully', life: 3000 });
   } catch (error) {
     console.error('Error updating data in Supabase:', error.message);
-    
+
     // Display error message
     toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to update row', life: 3000 });
   }
 };
 
+// Function to delete a row
 const deleteRow = async (id) => {
   try {
     console.log(`Deleting row ${id}`);
 
+    // Remove the deleted category from the categories array
     categories.value = categories.value.filter(category => category.id !== id);
     editingRows.value = editingRows.value.filter(rowId => rowId !== id);
 
+    // Delete the category data from Supabase
     const { error } = await supabase
       .from('Categories')
       .delete()
@@ -158,6 +181,7 @@ const deleteRow = async (id) => {
 
     console.log('Deleted data in Supabase');
 
+    // Refresh data from Supabase
     await fetchDataFromSupabase();
 
     // Display success message
@@ -170,12 +194,16 @@ const deleteRow = async (id) => {
   }
 };
 
+// Function to fetch data from Supabase
 const fetchDataFromSupabase = async () => {
   try {
+    // Fetch all data from the 'Categories' table in Supabase
     const { data, error } = await supabase.from('Categories').select('*');
     if (error) throw error;
 
     console.log('Fetched data from Supabase:', data);
+
+    // Update the categories and filteredCategories refs
     categories.value = data;
     filteredCategories.value = categories.value;
   } catch (error) {
@@ -183,28 +211,34 @@ const fetchDataFromSupabase = async () => {
   }
 };
 
+// Function to cancel the edit mode for a row
 const cancelEdit = (id) => {
   console.log(`Canceling edit for row ${id}`);
   editingRows.value = editingRows.value.filter(rowId => rowId !== id);
 };
 
+// Function to handle adding a new category
 const handleAddCategory = () => {
-  // Navigate to the ApiNewCategory
+  // Navigate to the 'api-new-category' route
   router.push({ name: 'api-new-category' });
 };
 
+// Fetch data from Supabase when the component is mounted
 onMounted(async () => {
   fetchDataFromSupabase();
 });
 
+// Watch for changes in the global search filter
 watch(globalFilter, (newVal) => {
   const searchTerm = newVal.toLowerCase();
 
+  // Filter categories based on the search term
   filteredCategories.value = searchTerm
     ? categories.value.filter(category => displayFields.some(field => String(category[field]).toLowerCase().includes(searchTerm)))
     : categories.value;
 });
 </script>
+
 
 <style scoped>
 .datatable-container {

@@ -1,5 +1,4 @@
 <!-- App.vue -->
-
 <template>
   <div id="app">
     <MenubarComponent />
@@ -8,10 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import MenubarComponent from './components/MenuBar.vue';
-
-const route = useRoute();
 </script>
 
 <style>
