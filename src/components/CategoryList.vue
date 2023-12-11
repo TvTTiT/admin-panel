@@ -2,7 +2,7 @@
   <div>
     <h2>Static Categories</h2>
     <div class="category-container">
-      <div v-for="(category, index) in items" :key="index" class="category-item p-shadow-4" @click="handleCategoryClick(category)">
+      <div v-for="(category, index) in items" :key="index" class="category-item" @click="handleCategoryClick(category)">
         <div class="category-box">
           <img :src="category.iconUrl" :alt="category.name" class="category-icon" />
         </div>

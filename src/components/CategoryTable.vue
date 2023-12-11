@@ -31,7 +31,7 @@
       <!-- Column for row editor actions (e.g., edit and delete buttons) -->
       <Column :rowEditor="true" style="width: 10%" bodyStyle="text-align:center">
         <template #body>
-          <button class="p-button p-button-text p-mr-2">
+          <button class="p-button p-button-text">
             <i class="pi pi-pencil"></i>
           </button>
           <button class="p-button p-button-text">

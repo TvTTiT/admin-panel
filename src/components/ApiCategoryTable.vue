@@ -29,9 +29,7 @@
     >
       <!-- Header template -->
       <template #header>
-        <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-          <span class="text-lg font-semibold">Categories</span>
-        </div>
+          <span>Categories</span>
       </template>
 
       <!-- Column definitions -->
@@ -65,11 +63,11 @@
       <!-- Column for row editing actions -->
       <Column :rowEditor="true" style="width: 150px" bodyStyle="text-align:center">
         <template #body="rowData">
-          <button v-if="!editingRows.includes(rowData.data.id)" class="p-button p-button-text p-mr-2" @click="editRow(rowData.data.id)">
+          <button v-if="!editingRows.includes(rowData.data.id)" class="p-button p-button-text" @click="editRow(rowData.data.id)">
             <i class="pi pi-pencil"></i>
           </button>
           <template v-else>
-            <button class="p-button p-button-text p-mr-2" @click="saveRow(rowData.data.id)">
+            <button class="p-button p-button-text" @click="saveRow(rowData.data.id)">
               <i class="pi pi-check"></i>
             </button>
             <button class="p-button p-button-text" @click="cancelEdit(rowData.data.id)">
